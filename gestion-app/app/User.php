@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 class User extends Model {
 	protected $table = 'users';
 	public $fillable = ['name', 'email', 'description'];
+	protected $hidden = ['deleted'];
 
 	static public function rules() {
 		return [

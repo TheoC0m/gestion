@@ -1,4 +1,4 @@
-<?php
+	<?php
 
 /*
 |--------------------------------------------------------------------------
@@ -57,6 +57,12 @@ $router->group(['prefix' => 'v1'], function() use ($router)
     $router->get('users/{id}', 'UserController@getUser');
     $router->put('users/{id}', 'UserController@updateUser');
     $router->delete('users/{id}', 'UserController@deleteUser');
-    $router->get('users/{id}/projects', 'ProjectController@getProject');
-    $router->get('users/{id}/tasks', 'TaskController@getTask');
+    $router->get('users/{id}/projects', 'UserController@getProject');
+    $router->get('users/{id}/tasks', 'UserController@getTask');
+
+	$router->get('projects', 'ProjectController@index');
+	$router->post('projects', 'ProjectController@createProject');
+	$router->get('projects/{id}', 'ProjectController@getProject');
+	$router->put('projects/{id}', 'ProjectController@updateProject');
+	$router->delete('projects/{id}', 'ProjectController@deleteProject');
 });
