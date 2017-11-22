@@ -11,49 +11,68 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
-class UserController extends Controller
-{
 
-    public function __construct()
-    {
-        //
-    }
+class UserController extends Controller {
 
-    public function index(Request $request)
-    {
-        $users = User::all();
-        return response()->json($users);
-    }
-    
-    public function getUser($id){
+	public function __construct() {
+		//
+	}
 
-        $user  = User::find($id);
+	public function index(Request $request) {
+		$users = User::all();
+		return response()->json($users);
+	}
 
-        return response()->json($user);
-    }
-    
-    public function createUser(Request $request)
-    {
-        $user=User::create($request->all());
-        return response()->json($user);
-    }
-    
-    public function updateUser(Request $request, $id)
-    {
-        $user=User::find($id);
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->description = $request->input('description');
-        $user->save();
-        return response()->json($user);
-    }
-    
-    public function deleteUser($id){
-        $user  = User::find($id);
-        $user->deleted = 1;
-        $user->save();
-        return response()->json('deleted');
-    }
+	public function getUser($id) {
+		$user = User::find($id);
+		if ($user instanceof User) {
+			return response()->json($user, 200, [], JSON_PRETTY_PRINT);
+		}
+		else {
+			return $this->customJsonStatusResponse('error', 'user', 'not found');
+		}
+	}
+
+	public function createUser(Request $request) {
+
+		$this->validate($request, User::rules());
+
+		$user = User::create($request->all());
+		return $this->customJsonStatusResponse('success', 'user', 'created', $user);
+		//return response()->json($user);
+	}
+
+	public function updateUser(Request $request, $id) {
+		$this->validate($request, User::rules());
+		$user = User::find($id);
+
+		if ($user instanceof User) {
+			$user->name = $request->input('name');
+			$user->email = $request->input('email');
+			if ($request->has('description')) {
+				$user->description = $request->input('description');
+			}
+			$user->save();
+			return $this->customJsonStatusResponse('success', 'user', 'updated', $user);
+		}
+		else {
+			return $this->customJsonStatusResponse('error', 'user', 'not found');
+		}
+	}
+
+	public function deleteUser($id) {
+		$user = User::find($id);
+
+		if ($user instanceof User) {
+			$user->deleted = 1;
+			$user->save();
+			return $this->customJsonStatusResponse('success', 'user', 'deleted');
+		}
+		else {
+			return $this->customJsonStatusResponse('error', 'user', 'not found');
+		}
+	}
 
 }
+
 ?>

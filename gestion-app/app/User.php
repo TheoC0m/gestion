@@ -11,9 +11,16 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 
-class User extends Model
-{
-    protected $table = 'users';
-    public $fillable = ['name', 'email', 'description'];
+class User extends Model {
+	protected $table = 'users';
+	public $fillable = ['name', 'email', 'description'];
+
+	static public function rules() {
+		return [
+			'name' => 'required',
+			'email' => 'required|email',
+			'description' => 'nullable'
+		];
+	}
 
 }

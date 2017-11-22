@@ -31,6 +31,10 @@ Homestead.json
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/dictionaries
+.idea/codeStyleSettings.xml
+.idea/gestion-app.iml
+.idea/modules.xml
+
 
 # Sensitive or high-churn files:
 .idea/**/dataSources/
