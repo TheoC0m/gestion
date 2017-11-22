@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Client :  localhost
--- Généré le :  Mar 21 Novembre 2017 à 22:25
+-- Généré le :  Mer 22 Novembre 2017 à 03:33
 -- Version du serveur :  5.7.20-0ubuntu0.16.04.1
 -- Version de PHP :  7.0.22-0ubuntu0.16.04.1
 
@@ -29,8 +29,8 @@ USE `gestion-app`;
 --
 
 DROP TABLE IF EXISTS `projects`;
-CREATE TABLE IF NOT EXISTS `projects` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `projects` (
+  `id` int(11) NOT NULL,
   `name` varchar(30) NOT NULL,
   `decription` text NOT NULL,
   `start` date NOT NULL,
@@ -39,9 +39,8 @@ CREATE TABLE IF NOT EXISTS `projects` (
   `real_end` date NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `deleted` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  `deleted` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Contenu de la table `projects`
@@ -57,8 +56,8 @@ INSERT INTO `projects` (`id`, `name`, `decription`, `start`, `end`, `status`, `r
 --
 
 DROP TABLE IF EXISTS `tasks`;
-CREATE TABLE IF NOT EXISTS `tasks` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `tasks` (
+  `id` int(11) NOT NULL,
   `name` varchar(30) NOT NULL,
   `description` text NOT NULL,
   `start` date NOT NULL,
@@ -68,10 +67,8 @@ CREATE TABLE IF NOT EXISTS `tasks` (
   `project_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `deleted` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `project_id` (`project_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  `deleted` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Contenu de la table `tasks`
@@ -87,23 +84,22 @@ INSERT INTO `tasks` (`id`, `name`, `description`, `start`, `end`, `status`, `pri
 --
 
 DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
   `name` varchar(30) NOT NULL,
   `email` varchar(50) NOT NULL,
   `description` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `deleted` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  `deleted` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Contenu de la table `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `description`, `created_at`, `updated_at`, `deleted`) VALUES
-(1, 'Utilisateur 1', 'user1@test.com', 'Ceci est un utilisateur test travaillant sur le projet 1. Il travaille aussi sur la tache 1.', '2017-11-21 21:13:04', '2017-11-21 21:13:04', 0);
+(1, 'Utilisateur 1', 'user1@test.com', 'Ceci est un utilisateur test travaillant sur le projet 1. Il travaille aussi sur la tache 1.', '2017-11-21 21:13:04', '2017-11-22 02:12:28', 0);
 
 -- --------------------------------------------------------
 
@@ -112,14 +108,12 @@ INSERT INTO `users` (`id`, `name`, `email`, `description`, `created_at`, `update
 --
 
 DROP TABLE IF EXISTS `user_project`;
-CREATE TABLE IF NOT EXISTS `user_project` (
+CREATE TABLE `user_project` (
   `user_id` int(11) NOT NULL,
   `project_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `deleted` tinyint(1) NOT NULL,
-  KEY `user_id` (`user_id`),
-  KEY `project_id` (`project_id`)
+  `deleted` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -136,15 +130,13 @@ INSERT INTO `user_project` (`user_id`, `project_id`, `created_at`, `updated_at`,
 --
 
 DROP TABLE IF EXISTS `user_task`;
-CREATE TABLE IF NOT EXISTS `user_task` (
+CREATE TABLE `user_task` (
   `user_id` int(11) NOT NULL,
   `task_id` int(11) NOT NULL,
   `estimation` int(11) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `deleted` tinyint(1) NOT NULL,
-  KEY `user_id` (`user_id`),
-  KEY `task_id` (`task_id`)
+  `deleted` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -154,6 +146,62 @@ CREATE TABLE IF NOT EXISTS `user_task` (
 INSERT INTO `user_task` (`user_id`, `task_id`, `estimation`, `created_at`, `updated_at`, `deleted`) VALUES
 (1, 1, 9, '2017-11-21 21:13:58', '2017-11-21 21:13:58', 0);
 
+--
+-- Index pour les tables exportées
+--
+
+--
+-- Index pour la table `projects`
+--
+ALTER TABLE `projects`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `tasks`
+--
+ALTER TABLE `tasks`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `project_id` (`project_id`);
+
+--
+-- Index pour la table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `user_project`
+--
+ALTER TABLE `user_project`
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `project_id` (`project_id`);
+
+--
+-- Index pour la table `user_task`
+--
+ALTER TABLE `user_task`
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `task_id` (`task_id`);
+
+--
+-- AUTO_INCREMENT pour les tables exportées
+--
+
+--
+-- AUTO_INCREMENT pour la table `projects`
+--
+ALTER TABLE `projects`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT pour la table `tasks`
+--
+ALTER TABLE `tasks`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT pour la table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- Contraintes pour les tables exportées
 --
