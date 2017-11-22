@@ -19,12 +19,12 @@ class UserController extends Controller {
 	}
 
 	public function index(Request $request) {
-		$users = User::all();
+		$users = User::all()->where('deleted', 0);
 		return response()->json($users);
 	}
 
 	public function getUser($id) {
-		$user = User::find($id);
+		$user = User::where('deleted', 0)->find($id);
 		if ($user instanceof User) {
 			return response()->json($user, 200, [], JSON_PRETTY_PRINT);
 		}
@@ -44,7 +44,7 @@ class UserController extends Controller {
 
 	public function updateUser(Request $request, $id) {
 		$this->validate($request, User::rules());
-		$user = User::find($id);
+		$user = User::where('deleted', 0)->find($id);
 
 		if ($user instanceof User) {
 			$user->name = $request->input('name');
@@ -61,7 +61,7 @@ class UserController extends Controller {
 	}
 
 	public function deleteUser($id) {
-		$user = User::find($id);
+		$user = User::where('deleted', 0)->find($id);
 
 		if ($user instanceof User) {
 			$user->deleted = 1;
