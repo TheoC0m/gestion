@@ -11,7 +11,7 @@ class Controller extends BaseController {
 	protected function buildFailedValidationResponse(Request $request, array $errors) {
 		// return ["code"=> 406 , "message" => "forbidden" , "errors" =>$errors];
 
-		return response()->json(['error' => ['message' => $errors, 'type' => 'wrong parameters', 'code' => '422']], 422, [], JSON_PRETTY_PRINT);
+		return response()->json(['error' => ['message' => $errors, 'type' => 'wrong parameter(s)', 'code' => '422']], 422, [], JSON_PRETTY_PRINT);
 
 	}
 

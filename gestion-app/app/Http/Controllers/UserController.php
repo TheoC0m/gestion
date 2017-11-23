@@ -49,6 +49,7 @@ class UserController extends Controller {
 		if ($user instanceof User) {
 			$user->name = $request->input('name');
 			$user->email = $request->input('email');
+			//on evite de supprimer la description optionelle si elle n'est pas envoyee
 			if ($request->has('description')) {
 				$user->description = $request->input('description');
 			}

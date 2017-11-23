@@ -48,7 +48,11 @@ class ProjectController extends Controller {
 
 		if ($project instanceof Project) {
 			$project->name = $request->input('name');
-			$project->email = $request->input('email');
+			$project->start = $request->input('start');
+			$project->end = $request->input('end');
+			$project->status = $request->input('status');
+			$project->real_end = $request->input('real_end');
+			//on evite de supprimer la description optionelle si elle n'est pas envoyee
 			if ($request->has('description')) {
 				$project->description = $request->input('description');
 			}

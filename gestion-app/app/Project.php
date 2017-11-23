@@ -9,6 +9,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\Rule;
 
 class Project extends Model {
 	protected $table = 'projects';
@@ -21,7 +22,7 @@ class Project extends Model {
 			'description' => 'nullable',
 			'start' => 'required|date',
 			'end' => 'required|date',
-			'status' => 'required|in: in_progress, paused, finished, stoped',
+			'status' =>  ['required', Rule::in(['in_progress', 'paused', 'finished', 'stoped'])],
 			'real_end' => 'required|date'
 		];
 	}
