@@ -12,6 +12,7 @@ namespace App\Http\Controllers;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\Task;
+use App\Project;
 
 class TaskController extends Controller {
 
@@ -40,17 +41,45 @@ class TaskController extends Controller {
 
 		$this->validate($request, Task::createRules());
 
-		$task = Task::create($request->all());
+		try {
+			//on tente de récupérer le project indiqué auquel apartient la task
+			$project = Project::where('deleted', 0)->findOrFail($request->input('project_id'));
+
+			$task = new Task([
+				'name' => $request->input('name'),
+				'description' => $request->input('description'),
+				'start' => $request->input('start'),
+				'end' => $request->input('end'),
+				'status' => $request->input('status'),
+				'priority' => $request->input('priority'),
+
+			]);
+
+			//on lie la task au project
+			$project->tasks()->save($task);
+
+
+		} catch (ModelNotFoundException $modelNotFoundException) {
+			return $this->customJsonStatusResponse('error', 'bounded project', 'not found');
+		}
 
 		return $this->customJsonStatusResponse('success', 'task', 'created', $task);
 		//return response()->json($task);
 	}
+
 
 	public function updateTask(Request $request, $id) {
 		$this->validate($request, Task::createRules());
 
 		try {
 			$task = Task::where('deleted', 0)->findOrFail($id);
+
+			try {
+				//on tente de récupérer le project indiqué auquel apartient la task
+				$project = Project::where('deleted', 0)->findOrFail($request->input('project_id'));
+			} catch (ModelNotFoundException $modelNotFoundException) {
+				return $this->customJsonStatusResponse('error', 'task\'s project', 'not found');
+			}
 
 			$task->name = $request->input('name');
 			$task->description = $request->input('description');
@@ -59,7 +88,9 @@ class TaskController extends Controller {
 			$task->status = $request->input('status');
 			$task->priority = $request->input('priority');
 
-			$task->save();
+			//$task->save();
+			//on lie la task au project
+			$project->tasks()->save($task);
 
 			return $this->customJsonStatusResponse('success', 'task', 'updated', $task);
 		} catch (ModelNotFoundException $modelNotFoundException) {
@@ -69,11 +100,44 @@ class TaskController extends Controller {
 
 	public function patchTask(Request $request, $id) {
 		$this->validate($request, Task::patchRules());
-		try {
 
+
+		try {
 			$task = Task::where('deleted', 0)->findOrFail($id);
+
+
+
+			try {
+				//si le project_id est envoyé par le client
+				if ($request->has('project_id')) {
+					//on tente de récupérer le project indiqué auquel apartient la task
+					$project = Project::where('deleted', 0)->findOrFail($request->input('project_id'));
+				}
+				else {
+					//le projet est celui lie a la task : on n'y touche pas
+					$project = Project::where('deleted', 0)->findOrFail($task->project_id);
+				}
+			} catch (ModelNotFoundException $modelNotFoundException) {
+				return $this->customJsonStatusResponse('error', 'task\'s project', 'not found');
+			}
+
+
+			
+
+
+			/*$task->fill([
+				'name' => $request->input('name'),
+			'description' => $request->input('description'),
+			'start' => $request->input('start'),
+			'end' => $request->input('end'),
+			'status' => $request->input('status'),
+			'priority' => $request->input('priority')
+			]);*/
+
 			$task->fill($request->all());
-			$task->save();
+
+			//on lie la task au project
+			$project->tasks()->save($task);
 
 			return $this->customJsonStatusResponse('success', 'task', 'patched', $task);
 

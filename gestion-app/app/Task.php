@@ -13,7 +13,7 @@ use Illuminate\Validation\Rule;
 
 class Task extends Model {
 	protected $table = 'tasks';
-	public $fillable = ['name', 'description', 'start', 'end', 'status', 'priority'];
+	public $fillable = ['name', 'description', 'start', 'end', 'status', 'priority', 'project_id'];
 	protected $hidden = ['deleted'];
 
 	static public function createRules() {
@@ -23,7 +23,8 @@ class Task extends Model {
 			'start' => 'required|date',
 			'end' => 'required|date',
 			'status' =>  ['required', Rule::in(['in_progress', 'paused', 'finished', 'stoped'])],
-			'priority' => 'required|integer'
+			'priority' => 'required|integer',
+			'project_id' => 'required|integer'
 		];
 	}
 
@@ -34,8 +35,14 @@ class Task extends Model {
 			'start' => 'filled|date',
 			'end' => 'filled|date',
 			'status' =>  ['filled', Rule::in(['in_progress', 'paused', 'finished', 'stoped'])],
-			'priority' => 'filled|integer'
+			'priority' => 'filled|integer',
+			'project_id' => 'filled|integer'
 		];
+	}
+
+	public function project()
+	{
+		return $this->belongsTo('App\Project');
 	}
 
 }
