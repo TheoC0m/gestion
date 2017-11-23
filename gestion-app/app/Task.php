@@ -11,9 +11,9 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
 
-class Project extends Model {
-	protected $table = 'projects';
-	public $fillable = ['name', 'description', 'start', 'end', 'status', 'real_end'];
+class Task extends Model {
+	protected $table = 'tasks';
+	public $fillable = ['name', 'description', 'start', 'end', 'status', 'priority'];
 	protected $hidden = ['deleted'];
 
 	static public function createRules() {
@@ -23,7 +23,7 @@ class Project extends Model {
 			'start' => 'required|date',
 			'end' => 'required|date',
 			'status' =>  ['required', Rule::in(['in_progress', 'paused', 'finished', 'stoped'])],
-			'real_end' => 'required|date'
+			'priority' => 'required|integer'
 		];
 	}
 
@@ -34,7 +34,7 @@ class Project extends Model {
 			'start' => 'filled|date',
 			'end' => 'filled|date',
 			'status' =>  ['filled', Rule::in(['in_progress', 'paused', 'finished', 'stoped'])],
-			'real_end' => 'filled|date'
+			'priority' => 'filled|integer'
 		];
 	}
 

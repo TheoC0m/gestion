@@ -22,7 +22,7 @@ class ProjectController extends Controller {
 	public function index(Request $request) {
 		$projects = Project::all()->where('deleted', 0);
 
-		return response()->json($projects);
+		return response()->json($projects, 200, [], JSON_PRETTY_PRINT);
 	}
 
 	public function getProject($id) {
@@ -36,7 +36,7 @@ class ProjectController extends Controller {
 
 	public function createProject(Request $request) {
 
-		$this->validate($request, Project::updateRules());
+		$this->validate($request, Project::createRules());
 
 		$project = Project::create($request->all());
 
@@ -45,7 +45,7 @@ class ProjectController extends Controller {
 	}
 
 	public function updateProject(Request $request, $id) {
-		$this->validate($request, Project::updateRules());
+		$this->validate($request, Project::createRules());
 
 		try {
 			$project = Project::where('deleted', 0)->findOrFail($id);

@@ -22,7 +22,8 @@ class UserController extends Controller {
 	public function index(Request $request) {
 		$users = User::all()->where('deleted', 0);
 
-		return response()->json($users);
+
+		return response()->json($users, 200, [], JSON_PRETTY_PRINT);
 	}
 
 	public function getUser($id) {
@@ -51,7 +52,6 @@ class UserController extends Controller {
 
 		try {
 			$user = User::where('deleted', 0)->findOrFail($id);
-
 
 			$user->name = $request->input('name');
 			$user->email = $request->input('email');

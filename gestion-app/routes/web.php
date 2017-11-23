@@ -67,4 +67,11 @@ $router->group(['prefix' => 'v1'], function() use ($router)
 	$router->put('projects/{id}', 'ProjectController@updateProject');
 	$router->patch('projects/{id}', 'ProjectController@patchProject');
 	$router->delete('projects/{id}', 'ProjectController@deleteProject');
+
+	$router->get('tasks', 'TaskController@index');
+	$router->post('tasks', 'TaskController@createTask');
+	$router->get('tasks/{id}', 'TaskController@getTask');
+	$router->put('tasks/{id}', 'TaskController@updateTask');
+	$router->patch('tasks/{id}', 'TaskController@patchTask');
+	$router->delete('tasks/{id}', 'TaskController@deleteTask');
 });
