@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use App\User;
 
@@ -20,56 +21,75 @@ class UserController extends Controller {
 
 	public function index(Request $request) {
 		$users = User::all()->where('deleted', 0);
+
 		return response()->json($users);
 	}
 
 	public function getUser($id) {
-		$user = User::where('deleted', 0)->find($id);
-		if ($user instanceof User) {
+
+		try {
+			$user = User::where('deleted', 0)->findOrFail($id);
+
 			return response()->json($user, 200, [], JSON_PRETTY_PRINT);
-		}
-		else {
+		} catch (ModelNotFoundException $modelNotFoundException) {
 			return $this->customJsonStatusResponse('error', 'user', 'not found');
 		}
 	}
 
 	public function createUser(Request $request) {
 
-		$this->validate($request, User::rules());
+		$this->validate($request, User::createRules());
 
 		$user = User::create($request->all());
+
 		return $this->customJsonStatusResponse('success', 'user', 'created', $user);
 		//return response()->json($user);
 	}
 
 	public function updateUser(Request $request, $id) {
-		$this->validate($request, User::rules());
-		$user = User::where('deleted', 0)->find($id);
+		$this->validate($request, User::createRules());
 
-		if ($user instanceof User) {
+		try {
+			$user = User::where('deleted', 0)->findOrFail($id);
+
+
 			$user->name = $request->input('name');
 			$user->email = $request->input('email');
-			//on evite de supprimer la description optionelle si elle n'est pas envoyee
-			if ($request->has('description')) {
-				$user->description = $request->input('description');
-			}
+			$user->description = $request->input('description');
+
 			$user->save();
+
 			return $this->customJsonStatusResponse('success', 'user', 'updated', $user);
+		} catch (ModelNotFoundException $modelNotFoundException) {
+			return $this->customJsonStatusResponse('error', 'user', 'not found');
 		}
-		else {
+	}
+
+	public function patchUser(Request $request, $id) {
+		$this->validate($request, User::patchRules());
+		try {
+
+			$user = User::where('deleted', 0)->findOrFail($id);
+			$user->fill($request->all());
+			$user->save();
+
+			return $this->customJsonStatusResponse('success', 'user', 'patched', $user);
+
+		} catch (ModelNotFoundException $modelNotFoundException) {
 			return $this->customJsonStatusResponse('error', 'user', 'not found');
 		}
 	}
 
 	public function deleteUser($id) {
-		$user = User::where('deleted', 0)->find($id);
+		try {
+			$user = User::where('deleted', 0)->findOrFail($id);
 
-		if ($user instanceof User) {
+
 			$user->deleted = 1;
 			$user->save();
+
 			return $this->customJsonStatusResponse('success', 'user', 'deleted');
-		}
-		else {
+		} catch (ModelNotFoundException $modelNotFoundException) {
 			return $this->customJsonStatusResponse('error', 'user', 'not found');
 		}
 	}

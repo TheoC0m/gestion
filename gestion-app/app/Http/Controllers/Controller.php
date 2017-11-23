@@ -21,7 +21,7 @@ class Controller extends BaseController {
 	 * @param $action l'action que l'on voulait effectuer sur la ressource
 	 * @param $data donnees additionnelles ex: l'objet cree ou mis a jour
 	 */
-	protected function customJsonStatusResponse($status, $ressourceName, $action, $data = null) {
+	protected function customJsonStatusResponse(String $status, String $ressourceName, String $action, $data = null) {
 		switch ($status) {
 
 			case 'success' :

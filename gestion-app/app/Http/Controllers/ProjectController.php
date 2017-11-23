@@ -11,6 +11,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Project;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ProjectController extends Controller {
 
@@ -20,59 +21,75 @@ class ProjectController extends Controller {
 
 	public function index(Request $request) {
 		$projects = Project::all()->where('deleted', 0);
+
 		return response()->json($projects);
 	}
 
 	public function getProject($id) {
-		$project = Project::where('deleted', 0)->find($id);
-		if ($project instanceof Project) {
+		try {
+		$project = Project::where('deleted', 0)->findOrFail($id);
 			return response()->json($project, 200, [], JSON_PRETTY_PRINT);
-		}
-		else {
+		} catch (ModelNotFoundException $modelNotFoundException) {
 			return $this->customJsonStatusResponse('error', 'project', 'not found');
 		}
 	}
 
 	public function createProject(Request $request) {
 
-		$this->validate($request, Project::rules());
+		$this->validate($request, Project::updateRules());
 
 		$project = Project::create($request->all());
+
 		return $this->customJsonStatusResponse('success', 'project', 'created', $project);
 		//return response()->json($project);
 	}
 
 	public function updateProject(Request $request, $id) {
-		$this->validate($request, Project::rules());
-		$project = Project::where('deleted', 0)->find($id);
+		$this->validate($request, Project::updateRules());
 
-		if ($project instanceof Project) {
+		try {
+			$project = Project::where('deleted', 0)->findOrFail($id);
+
 			$project->name = $request->input('name');
 			$project->start = $request->input('start');
 			$project->end = $request->input('end');
 			$project->status = $request->input('status');
 			$project->real_end = $request->input('real_end');
-			//on evite de supprimer la description optionelle si elle n'est pas envoyee
-			if ($request->has('description')) {
-				$project->description = $request->input('description');
-			}
+			$project->description = $request->input('description');
+
 			$project->save();
+
 			return $this->customJsonStatusResponse('success', 'project', 'updated', $project);
+		} catch (ModelNotFoundException $modelNotFoundException) {
+			return $this->customJsonStatusResponse('error', 'project', 'not found');
 		}
-		else {
+	}
+
+	public function patchProject(Request $request, $id) {
+		$this->validate($request, Project::patchRules());
+		try {
+
+			$project = Project::where('deleted', 0)->findOrFail($id);
+			$project->fill($request->all());
+			$project->save();
+
+			return $this->customJsonStatusResponse('success', 'project', 'patched', $project);
+
+		} catch (ModelNotFoundException $modelNotFoundException) {
 			return $this->customJsonStatusResponse('error', 'project', 'not found');
 		}
 	}
 
 	public function deleteProject($id) {
-		$project = Project::where('deleted', 0)->find($id);
+		try {
+			$project = Project::where('deleted', 0)->findOrFail($id);
 
-		if ($project instanceof Project) {
+
 			$project->deleted = 1;
 			$project->save();
+
 			return $this->customJsonStatusResponse('success', 'project', 'deleted');
-		}
-		else {
+		} catch (ModelNotFoundException $modelNotFoundException) {
 			return $this->customJsonStatusResponse('error', 'project', 'not found');
 		}
 	}

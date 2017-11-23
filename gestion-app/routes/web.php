@@ -56,6 +56,7 @@ $router->group(['prefix' => 'v1'], function() use ($router)
     $router->post('users', 'UserController@createUser');
     $router->get('users/{id}', 'UserController@getUser');
     $router->put('users/{id}', 'UserController@updateUser');
+    $router->patch('users/{id}', 'UserController@patchUser');
     $router->delete('users/{id}', 'UserController@deleteUser');
     $router->get('users/{id}/projects', 'UserController@getProject');
     $router->get('users/{id}/tasks', 'UserController@getTask');
@@ -64,5 +65,6 @@ $router->group(['prefix' => 'v1'], function() use ($router)
 	$router->post('projects', 'ProjectController@createProject');
 	$router->get('projects/{id}', 'ProjectController@getProject');
 	$router->put('projects/{id}', 'ProjectController@updateProject');
+	$router->patch('projects/{id}', 'ProjectController@patchProject');
 	$router->delete('projects/{id}', 'ProjectController@deleteProject');
 });

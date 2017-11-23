@@ -16,11 +16,19 @@ class User extends Model {
 	public $fillable = ['name', 'email', 'description'];
 	protected $hidden = ['deleted'];
 
-	static public function rules() {
+	static public function createRules() {
 		return [
-			'name' => 'required',
-			'email' => 'required|email',
-			'description' => 'nullable'
+			'name' => 'required|string|max:30',
+			'email' => 'required|email|max:254',
+			'description' => 'present|string|max:140'
+		];
+	}
+
+	static public function patchRules() {
+		return [
+			'name' => 'filled|string|max:30',
+			'email' => 'filled|email|max:254',
+			'description' => 'string|max:140'
 		];
 	}
 
