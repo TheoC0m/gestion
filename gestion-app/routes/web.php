@@ -76,4 +76,6 @@ $router->group(['prefix' => 'v1'], function() use ($router)
 	$router->put('tasks/{id}', 'TaskController@updateTask');
 	$router->patch('tasks/{id}', 'TaskController@patchTask');
 	$router->delete('tasks/{id}', 'TaskController@deleteTask');
+	$router->get('tasks/{id}/projects', 'TaskController@getProjects');
+	$router->get('tasks/{id}/users', 'TaskController@getUsers');
 });

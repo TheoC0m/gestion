@@ -160,6 +160,32 @@ class TaskController extends Controller {
 		}
 	}
 
+	public function getUsers($id) {
+		try {
+			$users = Task::where('tasks.deleted', 0)->findOrFail($id) //task existant num $id
+			->users()->where('users.deleted', 0) //ses users existants
+			->orderBy('name', 'asc')->get(); //order par nom user asc
+
+			return response()->json($users, 200, [], JSON_PRETTY_PRINT);
+
+		} catch (ModelNotFoundException $modelNotFoundException) {
+			return $this->customJsonStatusResponse('error', 'task', 'not found');
+		}
+	}
+
+	public function getProjects($id) {
+		try {
+			$projects = Task::where('tasks.deleted', 0)->findOrFail($id) //user existant num $id
+			->project()->where('projects.deleted', 0) //ses projects existants
+			->orderBy('start', 'desc')->get(); //order par debut chronoloqgique
+
+			return response()->json($projects, 200, [], JSON_PRETTY_PRINT);
+
+		} catch (ModelNotFoundException $modelNotFoundException) {
+			return $this->customJsonStatusResponse('error', 'task', 'not found');
+		}
+	}
+
 }
 
 ?>
