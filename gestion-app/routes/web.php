@@ -58,8 +58,8 @@ $router->group(['prefix' => 'v1'], function() use ($router)
     $router->put('users/{id}', 'UserController@updateUser');
     $router->patch('users/{id}', 'UserController@patchUser');
     $router->delete('users/{id}', 'UserController@deleteUser');
-    $router->get('users/{id}/projects', 'UserController@getProject');
-    $router->get('users/{id}/tasks', 'UserController@getTask');
+    $router->get('users/{id}/projects', 'UserController@getProjects');
+    $router->get('users/{id}/tasks', 'UserController@getTasks');
 
 	$router->get('projects', 'ProjectController@index');
 	$router->post('projects', 'ProjectController@createProject');

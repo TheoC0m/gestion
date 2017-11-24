@@ -32,4 +32,14 @@ class User extends Model {
 		];
 	}
 
+	//relation n-n avec project : on utilise 'worksOn' pour designer la table pivot et on utilise sa colonne estimation
+	public function projects(){
+		return $this->belongsToMany('App\Project')->as('works_on')->withPivot('deleted', 'created_at', 'updated_at')->withTimestamps();
+	}
+
+	//relation n-n avec task : on utilise 'worksOn' pour designer la table pivot et on utilise sa colonne estimation
+	public function tasks(){
+		return $this->belongsToMany('App\Task')->as('works_on')->withPivot('estimation', 'created_at', 'updated_at')->withTimestamps();
+	}
+
 }

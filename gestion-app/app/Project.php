@@ -43,4 +43,9 @@ class Project extends Model {
 		return $this->hasMany('App\Task');
 	}
 
+	//relation n-n avec user : on utilise 'member' pour designer la table pivot
+	public function users(){
+		return $this->belongsToMany('App\User')->as('member')->withPivot('created_at', 'updated_at')->withTimestamps();
+	}
+
 }

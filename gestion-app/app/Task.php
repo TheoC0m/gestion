@@ -45,4 +45,8 @@ class Task extends Model {
 		return $this->belongsTo('App\Project');
 	}
 
+	//relation n-n avec user : on utilise 'member' pour designer la table pivot et on utilise sa colonne estimation
+	public function users(){
+		return $this->belongsToMany('App\User')->as('member')->withPivot('estimation', 'created_at', 'updated_at')->withTimestamps();
+	}
 }

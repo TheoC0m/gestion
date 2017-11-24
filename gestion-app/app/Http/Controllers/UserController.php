@@ -94,6 +94,32 @@ class UserController extends Controller {
 		}
 	}
 
+	public function getProjects($id) {
+		try {
+			$projects = User::where('users.deleted', 0)->findOrFail($id) //user existant num $id
+						->projects()->where('projects.deleted', 0) //ses projects existants
+						->orderBy('updated_at', 'desc')->get(); //order par dernier project modifie
+
+			return response()->json($projects, 200, [], JSON_PRETTY_PRINT);
+
+		} catch (ModelNotFoundException $modelNotFoundException) {
+			return $this->customJsonStatusResponse('error', 'user', 'not found');
+		}
+	}
+
+	public function getTasks($id) {
+		try {
+			$tasks = User::where('users.deleted', 0)->findOrFail($id) //user existant num $id
+			->tasks()->where('tasks.deleted', 0) //ses projects existants
+			->orderBy('created_at', 'desc')->get(); //order par dernier project modifie
+
+			return response()->json($tasks, 200, [], JSON_PRETTY_PRINT);
+
+		} catch (ModelNotFoundException $modelNotFoundException) {
+			return $this->customJsonStatusResponse('error', 'user', 'not found');
+		}
+	}
+
 }
 
 ?>
