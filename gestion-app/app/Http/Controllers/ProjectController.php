@@ -94,6 +94,34 @@ class ProjectController extends Controller {
 		}
 	}
 
+
+	public function getUsers($id) {
+		try {
+			$users = Project::where('projects.deleted', 0)->findOrFail($id) //project existant num $id
+			->users()->where('users.deleted', 0) //ses users existants
+			->orderBy('name', 'asc')->get(); //order par nom user asc
+
+			return response()->json($users, 200, [], JSON_PRETTY_PRINT);
+
+		} catch (ModelNotFoundException $modelNotFoundException) {
+			return $this->customJsonStatusResponse('error', 'project', 'not found');
+		}
+	}
+
+	public function getTasks($id) {
+		try {
+			$tasks = Project::where('projects.deleted', 0)->findOrFail($id) //user existant num $id
+			->tasks()->where('tasks.deleted', 0) //ses projects existants
+			->orderBy('start', 'asc')->get(); //order par task chronologique
+
+			return response()->json($tasks, 200, [], JSON_PRETTY_PRINT);
+
+		} catch (ModelNotFoundException $modelNotFoundException) {
+			return $this->customJsonStatusResponse('error', 'project', 'not found');
+		}
+	}
+
+
 }
 
 ?>

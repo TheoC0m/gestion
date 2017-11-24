@@ -98,7 +98,7 @@ class UserController extends Controller {
 		try {
 			$projects = User::where('users.deleted', 0)->findOrFail($id) //user existant num $id
 						->projects()->where('projects.deleted', 0) //ses projects existants
-						->orderBy('updated_at', 'desc')->get(); //order par dernier project modifie
+						->orderBy('start', 'desc')->get(); //order par debut chronoloqgique
 
 			return response()->json($projects, 200, [], JSON_PRETTY_PRINT);
 
@@ -111,7 +111,7 @@ class UserController extends Controller {
 		try {
 			$tasks = User::where('users.deleted', 0)->findOrFail($id) //user existant num $id
 			->tasks()->where('tasks.deleted', 0) //ses projects existants
-			->orderBy('created_at', 'desc')->get(); //order par dernier project modifie
+			->orderBy('start', 'desc')->get(); //order par debut chronologique
 
 			return response()->json($tasks, 200, [], JSON_PRETTY_PRINT);
 
