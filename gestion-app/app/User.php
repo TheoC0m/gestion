@@ -11,7 +11,9 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 
 
-class User extends Model {
+class User extends Model implements AuthenticatableContract, AuthorizableContract {
+	use Authenticatable, Authorizable, SoftDeletes, HasApiTokens;
+
 	protected $table = 'users';
 	public $fillable = ['name', 'email', 'description'];
 	protected $hidden = ['deleted'];

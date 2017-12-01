@@ -174,10 +174,10 @@ class TaskController extends Controller {
 	}
 
 	public function getProjects($id) {
+		$projects = Task::where('tasks.deleted', 0)->findOrFail($id) //user existant num $id
+		->project()->where('projects.deleted', 0) //ses projects existants
+		->orderBy('start', 'desc')->get(); //order par debut chronoloqgique (meme si 1-n)
 		try {
-			$projects = Task::where('tasks.deleted', 0)->findOrFail($id) //user existant num $id
-			->project()->where('projects.deleted', 0) //ses projects existants
-			->orderBy('start', 'desc')->get(); //order par debut chronoloqgique
 
 			return response()->json($projects, 200, [], JSON_PRETTY_PRINT);
 
