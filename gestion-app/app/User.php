@@ -54,6 +54,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 	}
 
 
+
+	//ATTENTION IL SEMBLE QU'ON PUISSE METTRE N'IMPORTE QUEL PSSWD
 	//surcharge de la methode de hashage de passport
 	//ici j'ai desactive le hachage car les psswd ne sont pour l'instant pas hashes en bd
 	public function validateForPassportPasswordGrant($password)
@@ -65,7 +67,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
 		return $hashedPassword == $this->password;*/
 
-		return $password;
+		return $password == $this->password;
 	}
 
 }
