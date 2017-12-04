@@ -81,4 +81,4 @@ $router->group(['prefix' => 'v1', 'middleware' => 'auth:api'], function() use ($
 });
 
 	//register Lumen Passport routes
-	Dusterio\LumenPassport\LumenPassport::routes( $router, ['prefix' => 'oauth2']);
+	//Dusterio\LumenPassport\LumenPassport::routes( $router); //, ['prefix' => 'oauth2']);
