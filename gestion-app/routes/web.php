@@ -79,6 +79,4 @@ $router->group(['prefix' => 'v1', 'middleware' => 'auth:api'], function() use ($
 	$router->get('tasks/{id}/projects', 'TaskController@getProjects');
 	$router->get('tasks/{id}/users', 'TaskController@getUsers');
 });
-
-	//register Lumen Passport routes
-	//Dusterio\LumenPassport\LumenPassport::routes( $router); //, ['prefix' => 'oauth2']);
+	
