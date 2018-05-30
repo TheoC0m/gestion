@@ -43,6 +43,7 @@ class Controller extends BaseController {
 
 		//on attribue la requete d'origine a dataBquery ainsi si il n'y a pas de queryparam on renvoie juste la requete d'origine
 		$dataBaseQuery = $q;
+		//$sortData = array('created_at','asc');
 
 		//pour chaque paire de query/value du tableau
 		foreach ($queryParams as $query => $value){
@@ -71,9 +72,18 @@ class Controller extends BaseController {
 					$dataBaseQuery = $dataBaseQuery->where('user_id', $value);
 					break;
 
+				/*case 'asc':
+					$sortData[0] = $value;
+					$sortData[1] = 'asc';
+					break;
+
+				case 'desc':
+					$sortData[0] = $value;
+					$sortData[1] = 'desc';
+					break;*/
+
 				default:
-					$dataBaseQuery = $q;
-					print($dataBaseQuery);
+					//print($dataBaseQuery);
 					break;
 			}
 		}
