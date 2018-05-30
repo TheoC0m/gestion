@@ -15,11 +15,20 @@ use App\User;
 
 class UserController extends Controller {
 
-	public function __construct() {
-		//
+
+	/*
+	 * Constructeur qui reçoit la request
+	 * puis la passe au constructeur de la classe parent : Controller
+	 * (qui va placer la request dans l'attribut $this->request pour etre + facilement accessible)
+	 */
+	public function __construct(Request $request) {
+
+		parent::__construct($request);
+
 	}
 
 	public function index(Request $request) {
+
 		$users = User::all()->where('deleted', 0);
 
 
@@ -27,6 +36,10 @@ class UserController extends Controller {
 	}
 
 	public function getUser($id) {
+
+		//$this->queryString();
+
+
 
 		try {
 			$user = User::where('deleted', 0)->findOrFail($id);
@@ -109,9 +122,10 @@ class UserController extends Controller {
 
 	public function getTasks($id) {
 		try {
-			$tasks = User::where('users.deleted', 0)->findOrFail($id) //user existant num $id
-			->tasks()->where('tasks.deleted', 0) //ses projects existants
-			->orderBy('start', 'desc')->get(); //order par debut chronologique
+			$tasks = $this->queryString(User::where('users.deleted', 0)->findOrFail($id) //user existant num $id
+			->tasks()->where('tasks.deleted', 0)); //ses projects existants
+
+			$tasks = $tasks->orderBy('start', 'desc')->get(); //order par debut chronologique
 
 			return response()->json($tasks, 200, [], JSON_PRETTY_PRINT);
 

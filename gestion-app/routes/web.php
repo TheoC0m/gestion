@@ -32,7 +32,12 @@ $router->get('/v1', function () use ($router) {
 
 //'namespace' => 'App\Http\Controllers'
 // // e5e7a35ac033ecb7508588f9197f68ed
-$router->group(['prefix' => 'v1', 'middleware' => 'auth:api'], function() use ($router)
+
+
+// commentaire pour désactiver l'authentification pendant le dev
+//$router->group(['prefix' => 'v1', 'middleware' => 'auth:api'], function() use ($router)
+
+	$router->group(['prefix' => 'v1'], function() use ($router)
 {
     /*$app->post('register','UserController@create');
     $app->post('authorize','UserController@auth');
@@ -79,4 +84,3 @@ $router->group(['prefix' => 'v1', 'middleware' => 'auth:api'], function() use ($
 	$router->get('tasks/{id}/projects', 'TaskController@getProjects');
 	$router->get('tasks/{id}/users', 'TaskController@getUsers');
 });
-	

@@ -16,12 +16,19 @@ use App\Project;
 
 class TaskController extends Controller {
 
-	public function __construct() {
-		//
+	/*
+	 * Constructeur qui reçoit la request
+	 * puis la passe au constructeur de la classe parent : Controller
+	 * (qui va placer la request dans l'attribut $this->request pour etre + facilement accessible)
+	 */
+	public function __construct(Request $request) {
+
+		parent::__construct($request);
+
 	}
 
 	public function index(Request $request) {
-		$tasks = Task::all()->where('deleted', 0);
+		$tasks = $this->queryString(Task::all()->where('deleted', 0));
 
 		return response()->json($tasks, 200, [], JSON_PRETTY_PRINT);
 	}
