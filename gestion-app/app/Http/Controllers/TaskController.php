@@ -28,7 +28,7 @@ class TaskController extends Controller {
 	}
 
 	public function index(Request $request) {
-		$tasks = $this->queryString(Task::all()->where('deleted', 0));
+		$tasks = $this->queryString(Task::where('deleted', 0))->get();
 
 		return response()->json($tasks, 200, [], JSON_PRETTY_PRINT);
 	}
@@ -125,7 +125,7 @@ class TaskController extends Controller {
 					$project = Project::where('deleted', 0)->findOrFail($task->project_id);
 				}
 			} catch (ModelNotFoundException $modelNotFoundException) {
-				return $this->customJsonStatusResponse('error', 'task\'s project', 'not found');
+				//return $this->customJsonStatusResponse('error', 'task\'s project', 'not found');
 			}
 
 

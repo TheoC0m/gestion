@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use App\User;
 
@@ -130,6 +131,10 @@ class UserController extends Controller {
 			return response()->json($tasks, 200, [], JSON_PRETTY_PRINT);
 
 		} catch (ModelNotFoundException $modelNotFoundException) {
+			return $this->customJsonStatusResponse('error', 'user', 'not found');
+		}
+		catch (QueryException $queryException) {
+			var_dump($queryException);
 			return $this->customJsonStatusResponse('error', 'user', 'not found');
 		}
 	}
