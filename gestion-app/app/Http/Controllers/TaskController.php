@@ -29,7 +29,7 @@ class TaskController extends Controller {
 
 	public function index(Request $request) {
 		try {
-			$tasks = $this->queryString(Task::where('deleted', 0))->get();
+			$tasks = $this->queryString(Task::query())->get();
 			return response()->json($tasks, 200, [], JSON_PRETTY_PRINT);
 		}
 		catch(ModelNotFoundException $modelNotFoundException){
@@ -42,7 +42,7 @@ class TaskController extends Controller {
 	public function getTask($id) {
 
 		try {
-			$task = Task::where('deleted', 0)->findOrFail($id);
+			$task = Task::findOrFail($id);
 
 			return response()->json($task, 200, [], JSON_PRETTY_PRINT);
 		} catch (ModelNotFoundException $modelNotFoundException) {
@@ -56,7 +56,7 @@ class TaskController extends Controller {
 
 		try {
 			//on tente de récupérer le project indiqué auquel apartient la task
-			$project = Project::where('deleted', 0)->findOrFail($request->input('project_id'));
+			$project = Project::findOrFail($request->input('project_id'));
 
 			$task = new Task([
 				'name' => $request->input('name'),
@@ -85,11 +85,11 @@ class TaskController extends Controller {
 		$this->validate($request, Task::createRules());
 
 		try {
-			$task = Task::where('deleted', 0)->findOrFail($id);
+			$task = Task::findOrFail($id);
 
 			try {
 				//on tente de récupérer le project indiqué auquel apartient la task
-				$project = Project::where('deleted', 0)->findOrFail($request->input('project_id'));
+				$project = Project::findOrFail($request->input('project_id'));
 			} catch (ModelNotFoundException $modelNotFoundException) {
 				return $this->customJsonStatusResponse('error', 'task\'s project', 'not found');
 			}
@@ -116,7 +116,7 @@ class TaskController extends Controller {
 
 
 		try {
-			$task = Task::where('deleted', 0)->findOrFail($id);
+			$task = Task::findOrFail($id);
 
 
 
@@ -124,11 +124,11 @@ class TaskController extends Controller {
 				//si le project_id est envoyé par le client
 				if ($request->has('project_id')) {
 					//on tente de récupérer le project indiqué auquel apartient la task
-					$project = Project::where('deleted', 0)->findOrFail($request->input('project_id'));
+					$project = Project::findOrFail($request->input('project_id'));
 				}
 				else {
 					//le projet est celui lie a la task : on n'y touche pas
-					$project = Project::where('deleted', 0)->findOrFail($task->project_id);
+					$project = Project::findOrFail($task->project_id);
 				}
 			} catch (ModelNotFoundException $modelNotFoundException) {
 				//return $this->customJsonStatusResponse('error', 'task\'s project', 'not found');
@@ -161,11 +161,10 @@ class TaskController extends Controller {
 
 	public function deleteTask($id) {
 		try {
-			$task = Task::where('deleted', 0)->findOrFail($id);
+			$task = Task::findOrFail($id);
 
 
-			$task->deleted = 1;
-			$task->save();
+			$task->delete();
 
 			return $this->customJsonStatusResponse('success', 'task', 'deleted');
 		} catch (ModelNotFoundException $modelNotFoundException) {
@@ -175,10 +174,10 @@ class TaskController extends Controller {
 
 	public function getUsers($id) {
 		try {
-			$users = Task::where('tasks.deleted', 0)->findOrFail($id); //task existant num $id
+			$users = Task::findOrFail($id); //task existant num $id
 
 
-			$users = $this->queryString($users->users()->where('users.deleted', 0))->get(); //les users associés en appliquant les eventuels querystrings
+			$users = $this->queryString($users->users())->get(); //les users associés en appliquant les eventuels querystrings
 
 			return response()->json($users, 200, [], JSON_PRETTY_PRINT);
 
@@ -188,9 +187,9 @@ class TaskController extends Controller {
 	}
 
 	public function getProjects($id) {
-		$projects = Task::where('tasks.deleted', 0)->findOrFail($id); //task existant num $id
+		$projects = Task::findOrFail($id); //task existant num $id
 
-		$projects = $this->queryString($projects->project()->where('projects.deleted', 0))->get(); //les projects associé + application querystring
+		$projects = $this->queryString($projects->project())->get(); //les projects associé + application querystring
 		try {
 
 			return response()->json($projects, 200, [], JSON_PRETTY_PRINT);

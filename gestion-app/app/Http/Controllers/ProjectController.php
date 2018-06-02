@@ -28,7 +28,7 @@ class ProjectController extends Controller {
 
 	public function index(Request $request) {
 		try{
-			$projects = $this->queryString(Project::where('deleted', 0))->get();
+			$projects = $this->queryString(Project::query())->get();
 		} catch (ModelNotFoundException $modelNotFoundException) {
 			return $this->customJsonStatusResponse('error', 'project', 'not found');
 		}
@@ -38,7 +38,7 @@ class ProjectController extends Controller {
 
 	public function getProject($id) {
 		try {
-		$project = Project::where('deleted', 0)->findOrFail($id);
+		$project = Project::findOrFail($id);
 			return response()->json($project, 200, [], JSON_PRETTY_PRINT);
 		} catch (ModelNotFoundException $modelNotFoundException) {
 			return $this->customJsonStatusResponse('error', 'project', 'not found');
@@ -59,7 +59,7 @@ class ProjectController extends Controller {
 		$this->validate($request, Project::createRules());
 
 		try {
-			$project = Project::where('deleted', 0)->findOrFail($id);
+			$project = Project::findOrFail($id);
 
 			$project->name = $request->input('name');
 			$project->start = $request->input('start');
@@ -80,7 +80,7 @@ class ProjectController extends Controller {
 		$this->validate($request, Project::patchRules());
 		try {
 
-			$project = Project::where('deleted', 0)->findOrFail($id);
+			$project = Project::findOrFail($id);
 			$project->fill($request->all());
 			$project->save();
 
@@ -93,11 +93,10 @@ class ProjectController extends Controller {
 
 	public function deleteProject($id) {
 		try {
-			$project = Project::where('deleted', 0)->findOrFail($id);
+			$project = Project::findOrFail($id);
 
 
-			$project->deleted = 1;
-			$project->save();
+			$project->delete();
 
 			return $this->customJsonStatusResponse('success', 'project', 'deleted');
 		} catch (ModelNotFoundException $modelNotFoundException) {

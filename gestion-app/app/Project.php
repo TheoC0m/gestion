@@ -10,11 +10,18 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
 
 class Project extends Model {
+
+	use SoftDeletes;
+
+
+	protected $softCascade = ['tasks'];
 	protected $table = 'projects';
 	public $fillable = ['name', 'description', 'start', 'end', 'status', 'real_end'];
-	protected $hidden = ['deleted'];
+	protected $dates = ['deleted_at'];
 
 	static public function createRules() {
 		return [

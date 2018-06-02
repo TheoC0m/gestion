@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Schema;
-
+use Illuminate\Database\Schema
 use Illuminate\Http\JsonResponse;
 
 class Controller extends BaseController {

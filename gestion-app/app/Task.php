@@ -10,11 +10,16 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\Rule;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
 
 class Task extends Model {
+
+	use SoftDeletes;
+
 	protected $table = 'tasks';
 	public $fillable = ['name', 'description', 'start', 'end', 'status', 'priority', 'project_id'];
-	protected $hidden = ['deleted'];
+	protected $hidden = ['deleted_at'];
 
 	static public function createRules() {
 		return [

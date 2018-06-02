@@ -14,14 +14,18 @@ use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
 
 
 class User extends Model implements AuthenticatableContract, AuthorizableContract {
 	use Authenticatable, Authorizable, HasApiTokens;
+	use SoftDeletes;
 
+	protected $softCascade = ['projects','tasks'];
 	protected $table = 'users';
 	public $fillable = ['name', 'email', 'description', 'password'];
-	protected $hidden = ['deleted, password'];
+	protected $hidden = ['deleted_at, password'];
 
 	static public function createRules() {
 		return [
@@ -41,7 +45,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
 	//relation n-n avec project : on utilise 'worksOn' pour designer la table pivot et on utilise sa colonne estimation
 	public function projects() {
-		return $this->belongsToMany('App\Project')->as('works_on')->withPivot('deleted', 'created_at', 'updated_at')->withTimestamps();
+		return $this->belongsToMany('App\Project')->as('works_on')->withPivot('deleted_at', 'created_at', 'updated_at')->withTimestamps();
 	}
 
 	//relation n-n avec task : on utilise 'worksOn' pour designer la table pivot et on utilise sa colonne estimation

@@ -87,6 +87,9 @@ $app->register(App\Providers\AuthServiceProvider::class);
 $app->register(Laravel\Passport\PassportServiceProvider::class);
 $app->register(Dusterio\LumenPassport\PassportServiceProvider::class);
 
+//Package pour softdelete relation en cascade
+$app->register(Askedio\SoftCascade\Providers\LumenServiceProvider::class);
+
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes

@@ -30,7 +30,8 @@ class UserController extends Controller {
 
 	public function index(Request $request) {
 		try{
-		$users = $this->queryString(User::where('deleted', 0))->get();
+			//on n'utilise pas all() car renvoie une collection et non une query
+		$users = $this->queryString(User::query())->get();
 		} catch (ModelNotFoundException $modelNotFoundException) {
 			return $this->customJsonStatusResponse('error', 'user', 'not found');
 		}
@@ -45,7 +46,7 @@ class UserController extends Controller {
 
 
 		try {
-			$user = User::where('deleted', 0)->findOrFail($id);
+			$user = User::findOrFail($id);
 
 			return response()->json($user, 200, [], JSON_PRETTY_PRINT);
 		} catch (ModelNotFoundException $modelNotFoundException) {
@@ -67,7 +68,7 @@ class UserController extends Controller {
 		$this->validate($request, User::createRules());
 
 		try {
-			$user = User::where('deleted', 0)->findOrFail($id);
+			$user = User::findOrFail($id);
 
 			$user->name = $request->input('name');
 			$user->email = $request->input('email');
@@ -85,7 +86,7 @@ class UserController extends Controller {
 		$this->validate($request, User::patchRules());
 		try {
 
-			$user = User::where('deleted', 0)->findOrFail($id);
+			$user = User::findOrFail($id);
 			$user->fill($request->all());
 			$user->save();
 
@@ -98,11 +99,11 @@ class UserController extends Controller {
 
 	public function deleteUser($id) {
 		try {
-			$user = User::where('deleted', 0)->findOrFail($id);
+			$user = User::findOrFail($id);
 
 
-			$user->deleted = 1;
-			$user->save();
+			$user->delete();
+
 
 			return $this->customJsonStatusResponse('success', 'user', 'deleted');
 		} catch (ModelNotFoundException $modelNotFoundException) {
@@ -112,10 +113,10 @@ class UserController extends Controller {
 
 	public function getProjects($id) {
 		try {
-			$projects = User::where('users.deleted', 0)->findOrFail($id);
+			$projects = User::findOrFail($id);
 
 			//user existant num $id
-			$projects = $this->queryString($projects->projects()->where('projects.deleted', 0))->get(); //projects liés + querystring
+			$projects = $this->queryString($projects->projects())->get(); //projects liés + querystring
 
 			return response()->json($projects, 200, [], JSON_PRETTY_PRINT);
 
@@ -126,9 +127,9 @@ class UserController extends Controller {
 
 	public function getTasks($id) {
 		try {
-			$tasks = User::where('users.deleted', 0)->findOrFail($id); //user existant num $id
+			$tasks = User::findOrFail($id); //user existant num $id
 
-			$tasks = $this->queryString($tasks->tasks()->where('tasks.deleted', 0))->get(); //ses projects lies + querystring
+			$tasks = $this->queryString($tasks->tasks())->get(); //ses projects lies + querystring
 
 
 			return response()->json($tasks, 200, [], JSON_PRETTY_PRINT);
