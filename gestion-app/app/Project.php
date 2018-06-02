@@ -15,6 +15,7 @@ use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
 
 class Project extends Model {
 
+	use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
 	use SoftDeletes;
 
 

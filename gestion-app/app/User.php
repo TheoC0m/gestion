@@ -21,11 +21,12 @@ use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
 class User extends Model implements AuthenticatableContract, AuthorizableContract {
 	use Authenticatable, Authorizable, HasApiTokens;
 	use SoftDeletes;
+	use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
 
 	protected $softCascade = ['projects','tasks'];
 	protected $table = 'users';
 	public $fillable = ['name', 'email', 'description', 'password'];
-	protected $hidden = ['deleted_at, password'];
+	protected $hidden = ['password'];
 
 	static public function createRules() {
 		return [

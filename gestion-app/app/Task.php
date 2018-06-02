@@ -15,11 +15,12 @@ use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
 
 class Task extends Model {
 
+	use \Askedio\SoftCascade\Traits\SoftCascadeTrait;
 	use SoftDeletes;
 
 	protected $table = 'tasks';
 	public $fillable = ['name', 'description', 'start', 'end', 'status', 'priority', 'project_id'];
-	protected $hidden = ['deleted_at'];
+
 
 	static public function createRules() {
 		return [

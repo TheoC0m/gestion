@@ -138,7 +138,7 @@ class UserController extends Controller {
 			return $this->customJsonStatusResponse('error', 'user', 'not found');
 		}
 		catch (QueryException $queryException) {
-			var_dump($queryException);
+			//var_dump($queryException);
 			return $this->customJsonStatusResponse('error', 'user', 'not found');
 		}
 	}

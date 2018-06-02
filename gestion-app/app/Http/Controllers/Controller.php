@@ -61,28 +61,28 @@ class Controller extends BaseController {
 			switch ($query){
 
 				case 'status':
-					if(Schema::hasColumn($model->getTable(), $value)) {
+					if(Schema::hasColumn($model->getTable(), $query)) {
 						//on ajoute une clause where a la requete DB
 						$dataBaseQuery = $dataBaseQuery->where('status', $value);
 					}
 					break;
 
 				case 'project_id':
-					if(Schema::hasColumn($model->getTable(), $value)) {
+					if(Schema::hasColumn($model->getTable(), $query)) {
 						//on ajoute une clause where a la requete DB
 						$dataBaseQuery = $dataBaseQuery->where('project_id', $value);
 					}
 					break;
 
 				case 'task_id':
-					if(Schema::hasColumn($model->getTable(), $value)) {
+					if(Schema::hasColumn($model->getTable(), $query)) {
 						//on ajoute une clause where a la requete DB
 						$dataBaseQuery = $dataBaseQuery->where('task_id', $value);
 					}
 					break;
 
 				case 'user_id':
-					if(Schema::hasColumn($model->getTable(), $value)) {
+					if(Schema::hasColumn($model->getTable(), $query)) {
 						//on ajoute une clause where a la requete DB
 						$dataBaseQuery = $dataBaseQuery->where('user_id', $value);
 					}

@@ -107,9 +107,9 @@ class ProjectController extends Controller {
 
 	public function getUsers($id) {
 		try {
-			$users = Project::where('projects.deleted', 0)->findOrFail($id); //project existant num $id
+			$users = Project::findOrFail($id); //project existant num $id
 
-			$users = $this->queryString($users->users()->where('users.deleted', 0))->get(); //ses users lies + querystring
+			$users = $this->queryString($users->users())->get(); //ses users lies + querystring
 
 
 			return response()->json($users, 200, [], JSON_PRETTY_PRINT);
@@ -121,8 +121,8 @@ class ProjectController extends Controller {
 
 	public function getTasks($id) {
 		try {
-			$tasks = Project::where('projects.deleted', 0)->findOrFail($id); //user existant num $id
-			$tasks = $this->queryString($tasks->tasks()->where('tasks.deleted', 0))->get(); //ses projects lies + querystring
+			$tasks = Project::findOrFail($id); //user existant num $id
+			$tasks = $this->queryString($tasks->tasks())->get(); //ses projects lies + querystring
 
 
 			return response()->json($tasks, 200, [], JSON_PRETTY_PRINT);

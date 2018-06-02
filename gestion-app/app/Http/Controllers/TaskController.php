@@ -187,10 +187,11 @@ class TaskController extends Controller {
 	}
 
 	public function getProjects($id) {
+		try {
 		$projects = Task::findOrFail($id); //task existant num $id
 
 		$projects = $this->queryString($projects->project())->get(); //les projects associé + application querystring
-		try {
+
 
 			return response()->json($projects, 200, [], JSON_PRETTY_PRINT);
 
