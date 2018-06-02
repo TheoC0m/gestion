@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
-use Illuminate\Database\Schema
+use Illuminate\Support\Facades\Schema;
+
 use Illuminate\Http\JsonResponse;
 
 class Controller extends BaseController {
@@ -60,23 +61,31 @@ class Controller extends BaseController {
 			switch ($query){
 
 				case 'status':
-					//on ajoute une clause where a la requete DB
-					 $dataBaseQuery = $dataBaseQuery->where('status', $value);
+					if(Schema::hasColumn($model->getTable(), $value)) {
+						//on ajoute une clause where a la requete DB
+						$dataBaseQuery = $dataBaseQuery->where('status', $value);
+					}
 					break;
 
 				case 'project_id':
-					//on ajoute une clause where a la requete DB
-					$dataBaseQuery = $dataBaseQuery->where('project_id', $value);
+					if(Schema::hasColumn($model->getTable(), $value)) {
+						//on ajoute une clause where a la requete DB
+						$dataBaseQuery = $dataBaseQuery->where('project_id', $value);
+					}
 					break;
 
 				case 'task_id':
-					//on ajoute une clause where a la requete DB
-					$dataBaseQuery = $dataBaseQuery->where('task_id', $value);
+					if(Schema::hasColumn($model->getTable(), $value)) {
+						//on ajoute une clause where a la requete DB
+						$dataBaseQuery = $dataBaseQuery->where('task_id', $value);
+					}
 					break;
 
 				case 'user_id':
-					//on ajoute une clause where a la requete DB
-					$dataBaseQuery = $dataBaseQuery->where('user_id', $value);
+					if(Schema::hasColumn($model->getTable(), $value)) {
+						//on ajoute une clause where a la requete DB
+						$dataBaseQuery = $dataBaseQuery->where('user_id', $value);
+					}
 					break;
 
 				case 'asc':
