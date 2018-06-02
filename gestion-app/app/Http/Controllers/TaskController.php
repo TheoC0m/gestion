@@ -28,9 +28,15 @@ class TaskController extends Controller {
 	}
 
 	public function index(Request $request) {
-		$tasks = $this->queryString(Task::where('deleted', 0))->get();
+		try {
+			$tasks = $this->queryString(Task::where('deleted', 0))->get();
+			return response()->json($tasks, 200, [], JSON_PRETTY_PRINT);
+		}
+		catch(ModelNotFoundException $modelNotFoundException){
+			return $this->customJsonStatusResponse('error', 'task', 'not found');
+		}
 
-		return response()->json($tasks, 200, [], JSON_PRETTY_PRINT);
+
 	}
 
 	public function getTask($id) {
@@ -169,9 +175,10 @@ class TaskController extends Controller {
 
 	public function getUsers($id) {
 		try {
-			$users = Task::where('tasks.deleted', 0)->findOrFail($id) //task existant num $id
-			->users()->where('users.deleted', 0) //ses users existants
-			->orderBy('name', 'asc')->get(); //order par nom user asc
+			$users = Task::where('tasks.deleted', 0)->findOrFail($id); //task existant num $id
+
+
+			$users = $this->queryString($users->users()->where('users.deleted', 0))->get(); //les users associés en appliquant les eventuels querystrings
 
 			return response()->json($users, 200, [], JSON_PRETTY_PRINT);
 
@@ -181,9 +188,9 @@ class TaskController extends Controller {
 	}
 
 	public function getProjects($id) {
-		$projects = Task::where('tasks.deleted', 0)->findOrFail($id) //user existant num $id
-		->project()->where('projects.deleted', 0) //ses projects existants
-		->orderBy('start', 'desc')->get(); //order par debut chronoloqgique (meme si 1-n)
+		$projects = Task::where('tasks.deleted', 0)->findOrFail($id); //task existant num $id
+
+		$projects = $this->queryString($projects->project()->where('projects.deleted', 0))->get(); //les projects associé + application querystring
 		try {
 
 			return response()->json($projects, 200, [], JSON_PRETTY_PRINT);

@@ -15,12 +15,23 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ProjectController extends Controller {
 
-	public function __construct() {
-		//
+	/*
+ * Constructeur qui reçoit la request
+ * puis la passe au constructeur de la classe parent : Controller
+ * (qui va placer la request dans l'attribut $this->request pour etre + facilement accessible)
+ */
+	public function __construct(Request $request) {
+
+		parent::__construct($request);
+
 	}
 
 	public function index(Request $request) {
-		$projects = Project::all()->where('deleted', 0);
+		try{
+			$projects = $this->queryString(Project::where('deleted', 0))->get();
+		} catch (ModelNotFoundException $modelNotFoundException) {
+			return $this->customJsonStatusResponse('error', 'project', 'not found');
+		}
 
 		return response()->json($projects, 200, [], JSON_PRETTY_PRINT);
 	}
@@ -97,9 +108,10 @@ class ProjectController extends Controller {
 
 	public function getUsers($id) {
 		try {
-			$users = Project::where('projects.deleted', 0)->findOrFail($id) //project existant num $id
-			->users()->where('users.deleted', 0) //ses users existants
-			->orderBy('name', 'asc')->get(); //order par nom user asc
+			$users = Project::where('projects.deleted', 0)->findOrFail($id); //project existant num $id
+
+			$users = $this->queryString($users->users()->where('users.deleted', 0))->get(); //ses users lies + querystring
+
 
 			return response()->json($users, 200, [], JSON_PRETTY_PRINT);
 
@@ -110,9 +122,9 @@ class ProjectController extends Controller {
 
 	public function getTasks($id) {
 		try {
-			$tasks = Project::where('projects.deleted', 0)->findOrFail($id) //user existant num $id
-			->tasks()->where('tasks.deleted', 0) //ses projects existants
-			->orderBy('start', 'asc')->get(); //order par task chronologique
+			$tasks = Project::where('projects.deleted', 0)->findOrFail($id); //user existant num $id
+			$tasks = $this->queryString($tasks->tasks()->where('tasks.deleted', 0))->get(); //ses projects lies + querystring
+
 
 			return response()->json($tasks, 200, [], JSON_PRETTY_PRINT);
 
