@@ -131,7 +131,7 @@ class TaskController extends Controller {
 					$project = Project::findOrFail($task->project_id);
 				}
 			} catch (ModelNotFoundException $modelNotFoundException) {
-				//return $this->customJsonStatusResponse('error', 'task\'s project', 'not found');
+				return $this->customJsonStatusResponse('error', 'task\'s project', 'not found');
 			}
 
 
